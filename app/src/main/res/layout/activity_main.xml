@@ -15,7 +15,7 @@
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:onClick="bulb_on_off"
+        android:onClick="onClick"
         tools:layout_editor_absoluteX="113dp"
         tools:layout_editor_absoluteY="582dp" />
 
