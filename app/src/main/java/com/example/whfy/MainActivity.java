@@ -5,29 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
-import org.json.JSONObject;
+import java.util.List;
 
-import java.io.BufferedWriter;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.HashMap;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import javax.xml.transform.Result;
-
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,39 +17,50 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    // retrofit 호출 및 flag 설정(class 변수)
+    static boolean flag = false;
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/2/")
+            .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
+            .client(SSLHandling.getUnsafeOkHttpClient().build())
+            .build();
+
+    RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        SSLConnect ssl = new SSLConnect();
-//        ssl.postHttps("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/2/state", 1000, 1000);
     }
 
-    // button on-off code
+    // 버튼 클릭시 불빛 설정하는 method
     public void bulb_on_off (View view) {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/2/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(getUnsafeOkHttpClient().build())
-                .build();
+        // 전구 불빛 설정하는 code
+        flag = !flag;
+        Bulblight bulblight = new Bulblight(flag);
 
-        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+        // 전구 불빛 상태에 따른 메시지 출력 code
+        Toast.makeText(getApplicationContext(), flag ? "전구가 켜졌습니다." : "전구가 꺼졌습니다.", Toast.LENGTH_SHORT).show();
 
-        Bulblight bulblight = new Bulblight(true);
-        retrofitAPI.PutData(bulblight).enqueue(new Callback<Success>() {
+        // retrofitAPI를 이용하여 json 전송 code
+        retrofitAPI.PutData(bulblight).enqueue(new Callback<List<Bulbreceive>>() {
 
             @Override
-            public void onResponse(Call<Success> call, Response<Success> response) {
+            public void onResponse(Call<List<Bulbreceive>> call, Response<List<Bulbreceive>> response) {
                 if (response.isSuccessful()) {
-                    Success data = response.body();
+                    List<Bulbreceive> data = response.body();
                     Log.d("TEST", "성공");
+
+                    // data.get(0).getLights2StateOn() 반환형이 Boolean인데 String만 log에 찍혀서 주석 처리 해놓음 (성공한거임)
+//                    Log.d("TEST", data.get(0).getLights2StateOn());
+
                 }
             }
 
             @Override
-            public void onFailure(Call<Success> call, Throwable t) {
+            public void onFailure(Call<List<Bulbreceive>> call, Throwable t) {
                 t.printStackTrace();
                 Log.d("TEST", "실패");
             }
@@ -76,45 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // SSL certificate ignore code
-    public static OkHttpClient.Builder getUnsafeOkHttpClient() {
-        try {
-            final TrustManager[] trustAllCerts = new TrustManager[] {
-                    new X509TrustManager() {
-                        @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
 
-                        @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return new java.security.cert.X509Certificate[]{};
-                        }
-                    }
-            };
-
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-
-            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
-            builder.hostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-            return builder;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 
 //    public void bulb_on_off (View view){
 

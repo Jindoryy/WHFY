@@ -42,41 +42,47 @@
         android:text="Hue Bridge Connection"
         android:textAlignment="center"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.457"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="36dp" />
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierDirection="left"
-        app:constraint_referenced_ids="switch4" />
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="378dp"
+        android:layout_height="500dp"
+        android:orientation="horizontal"
+        android:paddingLeft="35dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="407dp">
 
-    <!--    <android.widget.Button-->
-    <!--        android:id="@+id/button"-->
-    <!--        android:layout_width="184dp"-->
-    <!--        android:layout_height="127dp"-->
-    <!--        android:background="@drawable/shape_for_circle_button"-->
-    <!--        android:text="ON\nOFF"-->
-    <!--        android:textColor="@color/black"-->
-    <!--        android:textSize="20sp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        android:onClick="bulb_on_off"-->
-    <!--        tools:layout_editor_absoluteX="113dp"-->
-    <!--        tools:layout_editor_absoluteY="582dp" />-->
+        <RadioButton
+            android:id="@+id/rg_btn1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="전구 1"
+            android:textAlignment="center"
+            android:textStyle="bold" />
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/textView"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="밝기 조절"-->
-    <!--        android:textAlignment="center"-->
-    <!--        android:textSize="15sp"-->
-    <!--        android:textStyle="bold"-->
-    <!--        tools:layout_editor_absoluteX="176dp"-->
-    <!--        tools:layout_editor_absoluteY="203dp" />-->
+        <RadioButton
+            android:id="@+id/rg_btn2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="전구 2"
+            android:textStyle="bold"
+            android:textAlignment="center" />
 
+        <RadioButton
+            android:id="@+id/rg_btn3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="전구 3"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

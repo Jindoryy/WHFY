@@ -3,7 +3,7 @@ package com.example.whfy;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Success {
+public class Bulbreceive {
 
     @SerializedName("/lights/2/state/on")
     @Expose
