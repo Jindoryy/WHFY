@@ -6,24 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-<!--    <android.widget.Button-->
-<!--        android:id="@+id/button"-->
-<!--        android:layout_width="184dp"-->
-<!--        android:layout_height="127dp"-->
-<!--        android:background="@drawable/shape_for_circle_button"-->
-<!--        android:text="ON\nOFF"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="20sp"-->
-<!--        android:textStyle="bold"-->
-<!--        android:onClick="bulb_on_off"-->
-<!--        tools:layout_editor_absoluteX="113dp"-->
-<!--        tools:layout_editor_absoluteY="582dp" />-->
-
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:barrierDirection="left" />
+        app:barrierDirection="left"
+        tools:layout_editor_absoluteX="411dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -32,45 +20,63 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="-36dp" />
 
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="357dp"
-        android:layout_height="68dp"
-        android:text="필립스 휴 스마트 조명 연결"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        tools:layout_editor_absoluteX="27dp"
-        tools:layout_editor_absoluteY="65dp" />
-
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="297dp"
-        android:layout_height="200dp"
-        android:max="100"
-        android:progress="20"
-        tools:layout_editor_absoluteX="57dp"
-        tools:layout_editor_absoluteY="191dp" />
-
     <Button
         android:id="@+id/button2"
+        android:layout_width="115dp"
+        android:layout_height="106dp"
+        android:layout_marginBottom="84dp"
+        android:background="@drawable/shape_for_circle_button"
+        android:onClick="bulb_on_off"
+        android:text="ON\nOFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Switch
+        android:id="@+id/switch4"
+        android:layout_width="376dp"
+        android:layout_height="73dp"
+        android:text="Hue Bridge Connection"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="36dp" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
-        android:onClick="bulb_on_off"
-        tools:layout_editor_absoluteX="158dp"
-        tools:layout_editor_absoluteY="421dp" />
+        app:barrierDirection="left"
+        app:constraint_referenced_ids="switch4" />
+
+    <!--    <android.widget.Button-->
+    <!--        android:id="@+id/button"-->
+    <!--        android:layout_width="184dp"-->
+    <!--        android:layout_height="127dp"-->
+    <!--        android:background="@drawable/shape_for_circle_button"-->
+    <!--        android:text="ON\nOFF"-->
+    <!--        android:textColor="@color/black"-->
+    <!--        android:textSize="20sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        android:onClick="bulb_on_off"-->
+    <!--        tools:layout_editor_absoluteX="113dp"-->
+    <!--        tools:layout_editor_absoluteY="582dp" />-->
 
     <!--    <TextView-->
-<!--        android:id="@+id/textView"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="밝기 조절"-->
-<!--        android:textAlignment="center"-->
-<!--        android:textSize="15sp"-->
-<!--        android:textStyle="bold"-->
-<!--        tools:layout_editor_absoluteX="176dp"-->
-<!--        tools:layout_editor_absoluteY="203dp" />-->
+    <!--        android:id="@+id/textView"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="밝기 조절"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textSize="15sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        tools:layout_editor_absoluteX="176dp"-->
+    <!--        tools:layout_editor_absoluteY="203dp" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

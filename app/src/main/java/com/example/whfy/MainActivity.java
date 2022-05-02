@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 //        ssl.postHttps("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/2/state", 1000, 1000);
     }
 
-
+    // button on-off code
     public void bulb_on_off (View view) {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        Bulblight bulblight = new Bulblight(false);
+        Bulblight bulblight = new Bulblight(true);
         retrofitAPI.PutData(bulblight).enqueue(new Callback<Success>() {
 
             @Override
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // SSL certificate ignore code
     public static OkHttpClient.Builder getUnsafeOkHttpClient() {
         try {
             final TrustManager[] trustAllCerts = new TrustManager[] {
