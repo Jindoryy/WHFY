@@ -44,9 +44,9 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintHorizontal_bias="0.542"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="36dp" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
     <RadioGroup
         android:id="@+id/radioGroup"
@@ -64,6 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="radioButtonClick"
             android:text="전구 1"
             android:textAlignment="center"
             android:textStyle="bold" />
@@ -73,6 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="radioButtonClick"
             android:text="전구 2"
             android:textAlignment="center"
             android:textStyle="bold" />
@@ -82,6 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:onClick="radioButtonClick"
             android:text="전구 3"
             android:textAlignment="center"
             android:textStyle="bold" />
@@ -91,7 +94,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="여기에 밝기 색상"
+        android:text="여기에 밝기조절 or 색상?"
         app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

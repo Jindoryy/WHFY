@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -17,25 +19,42 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    // 전구가 선택 되었는지 확인 출력하기 위해 잠시 생성
+//    TextView textView2;
+
+    // 전구 선택 클래스 선언
+    Bulbchoice bulbchoice = new Bulbchoice();
+
+    // 위젯 변수 선언
+    RadioButton radiobutton1, radiobutton2, radiobutton3;
+
     // retrofit 호출 및 flag 설정(class 변수)
     static boolean flag = false;
-    Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/2/")
-            .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
-            .client(SSLHandling.getUnsafeOkHttpClient().build())
-            .build();
-
-    RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 전구가 선택 되었는지 확인 출력하기 위해 잠시 생성
+//        textView2 = (TextView) findViewById(R.id.textView);
+
+        // 선언한 위젯변수에 id를 통해 해당 클래스들을 가져옴
+        radiobutton1 = (RadioButton) findViewById(R.id.rg_btn1);
+        radiobutton2 = (RadioButton) findViewById(R.id.rg_btn2);
+        radiobutton3 = (RadioButton) findViewById(R.id.rg_btn3);
     }
 
     // 버튼 클릭시 불빛 설정하는 method
     public void bulb_on_off (View view) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/" + bulbchoice.getChoice() + "/")
+                .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
+                .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
+                .build();
+
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
         // 전구 불빛 설정하는 code
         flag = !flag;
@@ -67,6 +86,43 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    public void radioButtonClick(View view) {
+        if (radiobutton1.isChecked()) {
+            bulbchoice.setChoice(1);
+
+            // 전구가 선택 되었는지 확인 출력하기 위해 잠시 생성
+//            textView2.setText("전구1 선택됨");
+        }
+        else if (radiobutton2.isChecked()) {
+            bulbchoice.setChoice(2);
+
+            // 전구가 선택 되었는지 확인 출력하기 위해 잠시 생성
+//            textView2.setText("전구2 선택됨");
+        }
+        else if (radiobutton3.isChecked()) {
+            bulbchoice.setChoice(3);
+
+            // 전구가 선택 되었는지 확인 출력하기 위해 잠시 생성
+//            textView2.setText("전구3 선택됨");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
