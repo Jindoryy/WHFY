@@ -56,8 +56,8 @@
         android:paddingLeft="35dp"
         app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintTop_toBottomOf="@+id/switch4"
-        app:layout_constraintVertical_bias="0.25"
-        tools:layout_editor_absoluteX="16dp">
+        app:layout_constraintVertical_bias="0.095"
+        tools:layout_editor_absoluteX="19dp">
 
         <RadioButton
             android:id="@+id/rg_btn1"
@@ -94,15 +94,43 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="여기에 밝기조절 or 색상?"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        android:text="색상 조절"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        app:layout_constraintVertical_bias="0.709" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <SeekBar
+        android:id="@+id/seekBar2"
+        android:layout_width="377dp"
+        android:layout_height="65dp"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        app:layout_constraintVertical_bias="0.334" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
