@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     // 전구별로 제어하기 위해 객체 배열 생성 (bulblights[0]은 쓰지 않음)
     Bulblight[] bulblights = { new Bulblight(), new Bulblight(), new Bulblight(), new Bulblight() };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         radiobutton3 = (RadioButton) findViewById(R.id.rg_btn3);
     }
 
-    // 버튼 클릭시 불빛 설정하는 method
+    // 버튼 클릭시 불빛 on/off 하는 메서드
     public void bulb_on_off (View view) {
 
         // retrofit 호출
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // 전구 선택 메서드
     public void radioButtonClick(View view) {
         if (radiobutton1.isChecked()) {
             Bulbpick = 1;
@@ -98,14 +101,55 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // 버튼 클릭시 전구 색깔 바꾸는 메서드
+    public void bulb_color (View view) {
 
+        // retrofit 호출
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/" + Bulbpick + "/")
+                .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
+                .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
+                .build();
 
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
+        switch (view.getId()) {
+            case R.id.buttonred:
+                bulblights[Bulbpick].setHue(0);
+                break;
+            case R.id.buttonorange:
+                bulblights[Bulbpick].setHue(10000);
+                break;
+            case R.id.buttongreen:
+                bulblights[Bulbpick].setHue(25500);
+                break;
+            case R.id.buttonblue:
+                bulblights[Bulbpick].setHue(46920);
+                break;
+            case R.id.buttonpupple:
+                bulblights[Bulbpick].setHue(50000);
+                break;
+        }
+        bulblights[Bulbpick].setOn(true);
 
+        // retrofitAPI를 이용하여 json 전송 code
+        retrofitAPI.PutData(bulblights[Bulbpick]).enqueue(new Callback<List<Bulbreceive>>() {
 
+            @Override
+            public void onResponse(Call<List<Bulbreceive>> call, Response<List<Bulbreceive>> response) {
+                if (response.isSuccessful()) {
+                    List<Bulbreceive> data = response.body();
+                    Log.d("TEST", "성공");
+                }
+            }
 
-
-
+            @Override
+            public void onFailure(Call<List<Bulbreceive>> call, Throwable t) {
+                t.printStackTrace();
+                Log.d("TEST", "실패");
+            }
+        });
+    }
 
 
 

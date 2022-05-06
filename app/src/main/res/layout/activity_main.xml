@@ -56,7 +56,7 @@
         android:paddingLeft="35dp"
         app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintTop_toBottomOf="@+id/switch4"
-        app:layout_constraintVertical_bias="0.095"
+        app:layout_constraintVertical_bias="0.239"
         tools:layout_editor_absoluteX="19dp">
 
         <RadioButton
@@ -90,21 +90,6 @@
             android:textStyle="bold" />
     </RadioGroup>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="색상 조절"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="0.709" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
         android:layout_width="wrap_content"
@@ -119,21 +104,105 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp" />
 
-    <SeekBar
-        android:id="@+id/seekBar2"
-        android:layout_width="377dp"
-        android:layout_height="65dp"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="0.334" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp" />
+
+    <LinearLayout
+        android:layout_width="392dp"
+        android:layout_height="62dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.473"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+        app:layout_constraintVertical_bias="0.508">
+
+        <Button
+            android:id="@+id/buttonred"
+            android:layout_width="38dp"
+            android:layout_height="59dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:backgroundTint="#FF0000"
+            android:onClick="bulb_color"
+            android:text="RED"
+            android:textSize="12sp"
+            tools:layout_editor_absoluteX="29dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/buttonorange"
+            android:layout_width="38dp"
+            android:layout_height="59dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:backgroundTint="#FFA500"
+            android:onClick="bulb_color"
+            android:text="ORANGE"
+            android:textSize="12sp"
+            tools:layout_editor_absoluteX="170dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/buttongreen"
+            android:layout_width="38dp"
+            android:layout_height="59dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:backgroundTint="#008000"
+            android:onClick="bulb_color"
+            android:text="GREEN"
+            android:textSize="12sp"
+            tools:layout_editor_absoluteX="239dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/buttonblue"
+            android:layout_width="38dp"
+            android:layout_height="59dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:backgroundTint="#0067A3"
+            android:onClick="bulb_color"
+            android:text="BLUE"
+            android:textSize="12sp"
+            tools:layout_editor_absoluteX="313dp"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <Button
+            android:id="@+id/buttonpupple"
+            android:layout_width="38dp"
+            android:layout_height="59dp"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:backgroundTint="#8B00FF"
+            android:onClick="bulb_color"
+            android:text="PUPPLE"
+            android:textSize="12sp"
+            tools:layout_editor_absoluteX="98dp"
+            tools:layout_editor_absoluteY="376dp" />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
