@@ -7,6 +7,7 @@ public class Bulblight {
 
     private boolean on;
     private int hue;
+    private int bri = 254;
 
     public Bulblight(){}
     public Bulblight(boolean on) {
@@ -21,6 +22,8 @@ public class Bulblight {
         this.hue = hue;
     }
 
+    public void setBri(int bri) { this.bri = bri; }
+
     public boolean getOn() {
         return on;
     }
@@ -28,4 +31,6 @@ public class Bulblight {
     public int getHue() {
         return hue;
     }
+
+    public int getBri() { return bri; }
 }

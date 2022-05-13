@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -149,6 +150,99 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TEST", "실패");
             }
         });
+    }
+
+    // 버튼을 눌렀을 때 단 시간내에 점, 소등하는 메서드
+    public void danger_button(View view) {
+
+        for (int i = 0; i < 30; i++) {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+                bulb_on_off(view);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // 버튼을 눌렀을 때 전체 소등
+    public void Alloff_button(View view) {
+
+        // retrofit 3개 호출
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/1/")
+                .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
+                .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
+                .build();
+        Retrofit retrofit2 = new Retrofit.Builder()
+                .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/2/")
+                .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
+                .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
+                .build();
+        Retrofit retrofit3 = new Retrofit.Builder()
+                .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/3/")
+                .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
+                .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
+                .build();
+
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+        RetrofitAPI retrofitAPI2 = retrofit2.create(RetrofitAPI.class);
+        RetrofitAPI retrofitAPI3 = retrofit3.create(RetrofitAPI.class);
+
+        // 전구별로 불빛 설정하는 code
+        bulblights[1].setOn(false);
+        bulblights[2].setOn(false);
+        bulblights[3].setOn(false);
+
+        // retrofitAPI를 이용하여 json 전송 code
+        retrofitAPI.PutData(bulblights[1]).enqueue(new Callback<List<Bulbreceive>>() {
+
+            @Override
+            public void onResponse(Call<List<Bulbreceive>> call, Response<List<Bulbreceive>> response) {
+                if (response.isSuccessful()) {
+                    List<Bulbreceive> data = response.body();
+                    Log.d("TEST", "성공");
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Bulbreceive>> call, Throwable t) {
+                t.printStackTrace();
+                Log.d("TEST", "실패");
+            }
+        });
+
+        retrofitAPI2.PutData(bulblights[2]).enqueue(new Callback<List<Bulbreceive>>() {
+
+            @Override
+            public void onResponse(Call<List<Bulbreceive>> call, Response<List<Bulbreceive>> response) {
+                if (response.isSuccessful()) {
+                    List<Bulbreceive> data = response.body();
+                    Log.d("TEST", "성공");
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Bulbreceive>> call, Throwable t) {
+                t.printStackTrace();
+                Log.d("TEST", "실패");
+            }
+        });
+
+        retrofitAPI3.PutData(bulblights[3]).enqueue(new Callback<List<Bulbreceive>>() {
+
+            @Override
+            public void onResponse(Call<List<Bulbreceive>> call, Response<List<Bulbreceive>> response) {
+                if (response.isSuccessful()) {
+                    List<Bulbreceive> data = response.body();
+                    Log.d("TEST", "성공");
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Bulbreceive>> call, Throwable t) {
+                t.printStackTrace();
+                Log.d("TEST", "실패");
+            }
+        });
+
     }
 
 
