@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     Bulblight[] bulblights = { new Bulblight(), new Bulblight(), new Bulblight(), new Bulblight() };
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,48 @@ public class MainActivity extends AppCompatActivity {
         radiobutton1 = (RadioButton) findViewById(R.id.rg_btn1);
         radiobutton2 = (RadioButton) findViewById(R.id.rg_btn2);
         radiobutton3 = (RadioButton) findViewById(R.id.rg_btn3);
+
+        // 휴 브릿지 연결 스위치
+        Switch bridge_switch = findViewById(R.id.bridge_switch);
+        bridge_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+
+                    // retrofit 호출
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("https://192.168.0.5/")
+                            .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
+                            .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
+                            .build();
+
+                    RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+                    retrofitAPI.PostData(new Devicetype()).enqueue(new Callback<List<Bridgekey>>() {
+                        @Override
+                        public void onResponse(Call<List<Bridgekey>> call, Response<List<Bridgekey>> response) {
+                            if (response.isSuccessful()) {
+                                List<Bridgekey> data = response.body();
+
+                                if (data.get(0).getUsername().equals("initial value")) {
+                                    Log.d("호출 데이터 TEST", data.get(0).getUsername());
+                                }
+                                else {
+                                    Log.d("호출 데이터 TEST", "호출 데이터 실패");
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Bridgekey>> call, Throwable t) {
+                            Log.d("호출 TEST", "호출 실패");
+                        }
+                    });
+
+                }else{
+                    Log.d("TEST", "실패");
+                }
+            }
+        });
     }
 
     // 버튼 클릭시 불빛 on/off 하는 메서드

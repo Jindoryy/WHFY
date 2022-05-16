@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Switch
-        android:id="@+id/switch4"
+        android:id="@+id/bridge_switch"
         android:layout_width="376dp"
         android:layout_height="73dp"
         android:text="Hue Bridge Connection"
@@ -55,7 +55,7 @@
         android:orientation="horizontal"
         android:paddingLeft="35dp"
         app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintTop_toBottomOf="@+id/switch4"
+        app:layout_constraintTop_toBottomOf="@+id/bridge_switch"
         app:layout_constraintVertical_bias="0.239"
         tools:layout_editor_absoluteX="19dp">
 
