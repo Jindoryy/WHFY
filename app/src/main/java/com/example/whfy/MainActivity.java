@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     // 전구별로 제어하기 위해 객체 배열 생성 (bulblights[0]은 쓰지 않음)
     Bulblight[] bulblights = { new Bulblight(), new Bulblight(), new Bulblight(), new Bulblight() };
 
+    // 브릿지 인증 키 값
+    static String Bridgekey;
 
 
     @Override
@@ -44,45 +46,69 @@ public class MainActivity extends AppCompatActivity {
         radiobutton2 = (RadioButton) findViewById(R.id.rg_btn2);
         radiobutton3 = (RadioButton) findViewById(R.id.rg_btn3);
 
-        // 휴 브릿지 연결 스위치
-        Switch bridge_switch = findViewById(R.id.bridge_switch);
-        bridge_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+//        // 휴 브릿지 연결 스위치
+//        Switch bridge_switch = findViewById(R.id.bridge_switch);
+//        bridge_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (isChecked) {
+//
+//                    // retrofit 호출
+//                    Retrofit retrofit = new Retrofit.Builder()
+//                            .baseUrl("https://192.168.0.5/")
+//                            .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
+//                            .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
+//                            .build();
+//
+//                    RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+//
+//                    retrofitAPI.PostData(new Devicetype()).enqueue(new Callback<List<Bridgekey>>() {
+//                        @Override
+//                        public void onResponse(Call<List<Bridgekey>> call, Response<List<Bridgekey>> response) {
+//                            if (response.isSuccessful()) {
+//                                List<Bridgekey> data = response.body();
+//
+//                                Bridgekey = data.get(0).getUsername();
+//                                Log.d("Bridge key",data.get(0).getUsername());
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<List<Bridgekey>> call, Throwable t) {
+//                            Log.d("호출 TEST", "호출 실패");
+//                        }
+//                    });
+//
+//                }else{
+//                    Log.d("TEST", "실패");
+//                }
+//            }
+//        });
+    }
 
-                    // retrofit 호출
-                    Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl("https://192.168.0.5/")
-                            .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
-                            .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
-                            .build();
+    public void bridge_connect (View view) {
+        // retrofit 호출
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://192.168.0.5/")
+                .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
+                .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
+                .build();
 
-                    RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-                    retrofitAPI.PostData(new Devicetype()).enqueue(new Callback<List<Bridgekey>>() {
-                        @Override
-                        public void onResponse(Call<List<Bridgekey>> call, Response<List<Bridgekey>> response) {
-                            if (response.isSuccessful()) {
-                                List<Bridgekey> data = response.body();
+        retrofitAPI.PostData(new Devicetype()).enqueue(new Callback<List<Bridgekey>>() {
+            @Override
+            public void onResponse(Call<List<Bridgekey>> call, Response<List<Bridgekey>> response) {
+                if (response.isSuccessful()) {
+                    List<Bridgekey> data = response.body();
 
-                                if (data.get(0).getUsername().equals("initial value")) {
-                                    Log.d("호출 데이터 TEST", data.get(0).getUsername());
-                                }
-                                else {
-                                    Log.d("호출 데이터 TEST", "호출 데이터 실패");
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<List<Bridgekey>> call, Throwable t) {
-                            Log.d("호출 TEST", "호출 실패");
-                        }
-                    });
-
-                }else{
-                    Log.d("TEST", "실패");
+                    Bridgekey = data.get(0).getSuccess().getUsername();
+                    Log.d("Bridge key",Bridgekey);
                 }
+            }
+
+            @Override
+            public void onFailure(Call<List<Bridgekey>> call, Throwable t) {
+                Log.d("호출 TEST", "호출 실패");
             }
         });
     }
@@ -117,10 +143,10 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<Bulbreceive>> call, Response<List<Bulbreceive>> response) {
                 if (response.isSuccessful()) {
                     List<Bulbreceive> data = response.body();
-                    Log.d("TEST", "성공");
+
 
                     // data.get(0).getLights2StateOn() 반환형이 Boolean인데 String만 log에 찍혀서 주석 처리 해놓음 (성공한거임)
-//                    Log.d("TEST", data.get(0).getLights2StateOn());
+                    Log.d("TEST", "" + data.get(0).getLights2StateOn() + "");
 
                 }
             }

@@ -232,5 +232,14 @@
         app:layout_constraintTop_toBottomOf="@+id/button"
         app:layout_constraintVertical_bias="0.176" />
 
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:onClick="bridge_connect"
+        tools:layout_editor_absoluteX="158dp"
+        tools:layout_editor_absoluteY="307dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

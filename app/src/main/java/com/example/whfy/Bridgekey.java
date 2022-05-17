@@ -5,15 +5,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class Bridgekey {
 
-    @SerializedName("username")
+    @SerializedName("success")
     @Expose
-    private String username = "initial value";
+    private Success success;
 
-    public void setUsername(String username) {
-        this.username = username;
+    public Success getSuccess() {
+        return success;
     }
 
-    public String getUsername() {
-        return username;
+    public void setSuccess(Success success) {
+        this.success = success;
     }
 }
