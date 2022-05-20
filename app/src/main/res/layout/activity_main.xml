@@ -35,19 +35,6 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Switch
-        android:id="@+id/bridge_switch"
-        android:layout_width="376dp"
-        android:layout_height="73dp"
-        android:text="Hue Bridge Connection"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.542"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3" />
-
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="373dp"
@@ -55,7 +42,7 @@
         android:orientation="horizontal"
         android:paddingLeft="35dp"
         app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintTop_toBottomOf="@+id/bridge_switch"
+        app:layout_constraintTop_toBottomOf="@+id/button_bridge"
         app:layout_constraintVertical_bias="0.239"
         tools:layout_editor_absoluteX="19dp">
 
@@ -233,13 +220,28 @@
         app:layout_constraintVertical_bias="0.176" />
 
     <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
+        android:id="@+id/button_bridge"
+        android:layout_width="116dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="28dp"
         android:onClick="bridge_connect"
-        tools:layout_editor_absoluteX="158dp"
-        tools:layout_editor_absoluteY="307dp" />
+        android:text="Connect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.935"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="223dp"
+        android:layout_height="45dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
+        app:layout_constraintEnd_toStartOf="@+id/button_bridge"
+        app:layout_constraintHorizontal_bias="0.735"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.24" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

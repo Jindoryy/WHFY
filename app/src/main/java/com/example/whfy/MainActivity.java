@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     Bulblight[] bulblights = { new Bulblight(), new Bulblight(), new Bulblight(), new Bulblight() };
 
     // 브릿지 인증 키 값
-    static String Bridgekey;
+    static String Bridgekey = "initial value";
 
 
     @Override
@@ -45,47 +46,14 @@ public class MainActivity extends AppCompatActivity {
         radiobutton1 = (RadioButton) findViewById(R.id.rg_btn1);
         radiobutton2 = (RadioButton) findViewById(R.id.rg_btn2);
         radiobutton3 = (RadioButton) findViewById(R.id.rg_btn3);
-
-//        // 휴 브릿지 연결 스위치
-//        Switch bridge_switch = findViewById(R.id.bridge_switch);
-//        bridge_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//
-//                    // retrofit 호출
-//                    Retrofit retrofit = new Retrofit.Builder()
-//                            .baseUrl("https://192.168.0.5/")
-//                            .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
-//                            .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
-//                            .build();
-//
-//                    RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-//
-//                    retrofitAPI.PostData(new Devicetype()).enqueue(new Callback<List<Bridgekey>>() {
-//                        @Override
-//                        public void onResponse(Call<List<Bridgekey>> call, Response<List<Bridgekey>> response) {
-//                            if (response.isSuccessful()) {
-//                                List<Bridgekey> data = response.body();
-//
-//                                Bridgekey = data.get(0).getUsername();
-//                                Log.d("Bridge key",data.get(0).getUsername());
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<List<Bridgekey>> call, Throwable t) {
-//                            Log.d("호출 TEST", "호출 실패");
-//                        }
-//                    });
-//
-//                }else{
-//                    Log.d("TEST", "실패");
-//                }
-//            }
-//        });
     }
 
+    // 브릿지 연결하는 메서드
     public void bridge_connect (View view) {
+
+        // 텍스트 위젯 생성
+        TextView textView = (TextView) findViewById(R.id.textView);
+
         // retrofit 호출
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://192.168.0.5/")
@@ -101,8 +69,12 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     List<Bridgekey> data = response.body();
 
-                    Bridgekey = data.get(0).getSuccess().getUsername();
-                    Log.d("Bridge key",Bridgekey);
+                    try {
+                        Bridgekey = data.get(0).getSuccess().getUsername();
+                        Log.d("Bridge key", Bridgekey);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -111,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("호출 TEST", "호출 실패");
             }
         });
+
+        // 버튼 연결 알림
+        if ( view.getId() == R.id.button_bridge ) {
+            textView.setText("버튼에 연결 되었습니다.");
+        }
     }
 
     // 버튼 클릭시 불빛 on/off 하는 메서드
@@ -118,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         // retrofit 호출
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/" + Bulbpick + "/")
+                .baseUrl("https://192.168.0.5/api/" + Bridgekey +"/lights/" + Bulbpick + "/")
                 .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
                 .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
                 .build();
@@ -178,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
         // retrofit 호출
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/" + Bulbpick + "/")
+                .baseUrl("https://192.168.0.5/api/" + Bridgekey + "/lights/" + Bulbpick + "/")
                 .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
                 .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
                 .build();
@@ -241,17 +218,17 @@ public class MainActivity extends AppCompatActivity {
 
         // retrofit 3개 호출
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/1/")
+                .baseUrl("https://192.168.0.5/api/" + Bridgekey + "/lights/1/")
                 .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
                 .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
                 .build();
         Retrofit retrofit2 = new Retrofit.Builder()
-                .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/2/")
+                .baseUrl("https://192.168.0.5/api/" + Bridgekey + "/lights/2/")
                 .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
                 .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
                 .build();
         Retrofit retrofit3 = new Retrofit.Builder()
-                .baseUrl("https://192.168.0.5/api/8I8sTewkIthh6U9p4nLm9XJ5tIf0LbeVbwhTQY1y/lights/3/")
+                .baseUrl("https://192.168.0.5/api/" + Bridgekey + "/lights/3/")
                 .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
                 .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
                 .build();
