@@ -72,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         Bridgekey = data.get(0).getSuccess().getUsername();
                         Log.d("Bridge key", Bridgekey);
+
+                        // 버튼 연결 알림
+                        if ( !Bridgekey.equals("initial value") ) {
+                            Toast.makeText(getApplicationContext(), "브릿지에 연결 되었습니다.", Toast.LENGTH_LONG).show();
+                        }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -83,11 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("호출 TEST", "호출 실패");
             }
         });
-
-        // 버튼 연결 알림
-        if ( view.getId() == R.id.button_bridge ) {
-            textView.setText("버튼에 연결 되었습니다.");
-        }
     }
 
     // 버튼 클릭시 불빛 on/off 하는 메서드
@@ -122,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
                     List<Bulbreceive> data = response.body();
 
 
-                    // data.get(0).getLights2StateOn() 반환형이 Boolean인데 String만 log에 찍혀서 주석 처리 해놓음 (성공한거임)
-                    Log.d("TEST", "" + data.get(0).getLights2StateOn() + "");
+//                    // data.get(0).getLights2StateOn() 반환형이 Boolean인데 String만 log에 찍혀서 주석 처리 해놓음 (성공한거임)
+//                    Log.d("TEST", "" + data.get(0).getLights2StateOn() + "");
 
                 }
             }

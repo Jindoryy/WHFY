@@ -221,27 +221,30 @@
 
     <Button
         android:id="@+id/button_bridge"
-        android:layout_width="116dp"
-        android:layout_height="62dp"
+        android:layout_width="43dp"
+        android:layout_height="49dp"
         android:layout_marginTop="28dp"
         android:onClick="bridge_connect"
-        android:text="Connect"
+        android:text="C"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.935"
+        app:layout_constraintHorizontal_bias="0.942"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="223dp"
+        android:layout_width="290dp"
         android:layout_height="45dp"
-        android:text="TextView"
+        android:text="Hue Bridge Connection"
+        android:textAlignment="center"
+        android:textSize="27sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toStartOf="@+id/button_bridge"
-        app:layout_constraintHorizontal_bias="0.735"
+        app:layout_constraintHorizontal_bias="0.684"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.24" />
+        app:layout_constraintVertical_bias="0.304" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
