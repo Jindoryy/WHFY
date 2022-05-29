@@ -16,6 +16,7 @@ android {
     }
 
     buildTypes {
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -26,6 +27,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+
+//dependencyResolutionManagement {
+//    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+//    repositories {
+//        google()
+//        mavenCentral()
+//        maven { url 'https://mvnrepository.com/artifact/com.kailashdabhi/om-recorder/1.1.5' }
+//    }
+//}
 
 dependencies {
 
@@ -38,4 +48,19 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.14.9'
+
+//    // https://mvnrepository.com/artifact/com.kailashdabhi/om-recorder
+//    implementation group: 'com.kailashdabhi', name: 'om-recorder', version: '1.1.0'
+
+//    implementation 'com.kailashdabhi:om-recorder:1.1.5'
+// https://mvnrepository.com/artifact/com.kailashdabhi/om-recorder
+//    implementation 'com.kailashdabhi:om-recorder:1.1.1'
+//
+//    implementation group: 'com.kailashdabhi', name: 'om-recorder', version: '1.1.1'
+//    implementation group: 'com.kailashdabhi', name: 'om-recorder', version: '1.1.5'
+
+//    implementation('com.kailashdabhi:om-recorder:1.1.5')
+
+
 }
