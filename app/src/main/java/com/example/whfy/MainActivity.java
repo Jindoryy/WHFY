@@ -39,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
     // 서버에서 넘어오는 사운드 결과값
     static String Sound_result = "initial sound";
 
-
-
-
     // 전구 선택 변수 선언
     static int Bulbpick;
 
@@ -49,11 +46,10 @@ public class MainActivity extends AppCompatActivity {
     RadioButton radiobutton1, radiobutton2, radiobutton3;
 
     // 전구별로 제어하기 위해 객체 배열 생성 (bulblights[0]은 쓰지 않음)
-    Bulblight[] bulblights = { new Bulblight(), new Bulblight(), new Bulblight(), new Bulblight() };
+    Bulblight[] bulblights = {new Bulblight(), new Bulblight(), new Bulblight(), new Bulblight()};
 
     // 브릿지 인증 키 값
     static String Bridgekey = "initial value";
-
 
 
     @Override
@@ -68,9 +64,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     // 브릿지 연결하는 메서드
-    public void bridge_connect (View view) {
+    public void bridge_connect(View view) {
 
         // 텍스트 위젯 생성
         TextView textView = (TextView) findViewById(R.id.textView);
@@ -95,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("Bridge key", Bridgekey);
 
                         // 버튼 연결 알림
-                        if ( !Bridgekey.equals("initial value") ) {
+                        if (!Bridgekey.equals("initial value")) {
                             Toast.makeText(getApplicationContext(), "브릿지에 연결 되었습니다.", Toast.LENGTH_LONG).show();
                         }
 
@@ -114,13 +109,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     // 버튼 클릭시 불빛 on/off 하는 메서드
-    public void bulb_on_off (View view) {
+    public void bulb_on_off(View view) {
 
         // retrofit 호출
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://192.168.0.5/api/" + Bridgekey +"/lights/" + Bulbpick + "/")
+                .baseUrl("https://192.168.0.5/api/" + Bridgekey + "/lights/" + Bulbpick + "/")
                 .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
                 .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
                 .build();
@@ -128,12 +122,10 @@ public class MainActivity extends AppCompatActivity {
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
 
-
         // 전구별로 불빛 설정하는 code
         if (bulblights[Bulbpick].getOn()) {
             bulblights[Bulbpick].setOn(false);
-        }
-        else {
+        } else {
             bulblights[Bulbpick].setOn(true);
         }
 
@@ -165,24 +157,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     // 전구 선택 메서드
     public void radioButtonClick(View view) {
         if (radiobutton1.isChecked()) {
             Bulbpick = 1;
-        }
-        else if (radiobutton2.isChecked()) {
+        } else if (radiobutton2.isChecked()) {
             Bulbpick = 2;
-        }
-        else if (radiobutton3.isChecked()) {
+        } else if (radiobutton3.isChecked()) {
             Bulbpick = 3;
         }
     }
 
 
-
     // 버튼 클릭시 전구 색깔 바꾸는 메서드
-    public void bulb_color (View view) {
+    public void bulb_color(View view) {
 
         // retrofit 호출
         Retrofit retrofit = new Retrofit.Builder()
@@ -192,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-
 
 
         switch (view.getId()) {
@@ -250,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     // 버튼을 눌렀을 때 전체 소등
     public void Alloff_button(View view) {
 
@@ -282,8 +268,6 @@ public class MainActivity extends AppCompatActivity {
         bulblights[3].setOn(false);
 
 
-
-
         // retrofitAPI를 이용하여 json 전송 code
         retrofitAPI.PutData(bulblights[1]).enqueue(new Callback<List<Bulbreceive>>() {
 
@@ -294,13 +278,13 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("TEST", "성공");
                 }
             }
+
             @Override
             public void onFailure(Call<List<Bulbreceive>> call, Throwable t) {
                 t.printStackTrace();
                 Log.d("TEST", "실패");
             }
         });
-
 
 
         retrofitAPI2.PutData(bulblights[2]).enqueue(new Callback<List<Bulbreceive>>() {
@@ -312,13 +296,13 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("TEST", "성공");
                 }
             }
+
             @Override
             public void onFailure(Call<List<Bulbreceive>> call, Throwable t) {
                 t.printStackTrace();
                 Log.d("TEST", "실패");
             }
         });
-
 
 
         retrofitAPI3.PutData(bulblights[3]).enqueue(new Callback<List<Bulbreceive>>() {
@@ -330,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("TEST", "성공");
                 }
             }
+
             @Override
             public void onFailure(Call<List<Bulbreceive>> call, Throwable t) {
                 t.printStackTrace();
@@ -340,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 서버에서 받은 결과 값으로 점등하는 메서드
-    public void Sound_data (View view) {
+    public void Sound_data(View view) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -355,9 +340,9 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
-                        Sound_result = response.body().string();
-                        Log.v(TAG, "Sound_result = " + Sound_result);
-                        Toast.makeText(getApplicationContext(), Sound_result, Toast.LENGTH_SHORT).show();
+                        MainActivity.Sound_result = response.body().string();
+
+                        Log.v(TAG, "Sound_result = " + MainActivity.Sound_result);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -373,27 +358,126 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Response Fail", Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-        // retrofit 호출
+
+    public void Sound_bulb(View view) {
+        for (int i = 0; i < 20; i++) {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+                Sound_bulb2(view);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // 서버에서 받아 온 값으로 단 시간내 점소등 하는 메서드
+    public void Sound_bulb2(View view) {
+
+        // retrofit 3개 호출
         Retrofit retrofit2 = new Retrofit.Builder()
+                .baseUrl("https://192.168.0.5/api/" + Bridgekey + "/lights/1/")
+                .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
+                .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
+                .build();
+        Retrofit retrofit3 = new Retrofit.Builder()
                 .baseUrl("https://192.168.0.5/api/" + Bridgekey + "/lights/2/")
+                .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
+                .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
+                .build();
+        Retrofit retrofit4 = new Retrofit.Builder()
+                .baseUrl("https://192.168.0.5/api/" + Bridgekey + "/lights/3/")
                 .addConverterFactory(GsonConverterFactory.create()) // gson은 json을 java class로 바꾸는데 사용
                 .client(SSLHandling.getUnsafeOkHttpClient().build()) // ssl 우회 code
                 .build();
 
         RetrofitAPI retrofitAPI = retrofit2.create(RetrofitAPI.class);
+        RetrofitAPI retrofitAPI2 = retrofit3.create(RetrofitAPI.class);
+        RetrofitAPI retrofitAPI3 = retrofit4.create(RetrofitAPI.class);
 
-        if ( !(Sound_result.equals("initial sound")) && Sound_result.equals("glass")) {
+
+        Log.d("sound_data", Sound_result);
+        if (Sound_result.equals("glass")) { // glass (유리)
+            bulblights[1].setHue(0);
             bulblights[2].setHue(0);
-        }
-        else {
+            bulblights[3].setHue(0);
+        } else if (Sound_result.equals("knock")) { // knock (노크)
+            bulblights[1].setHue(10000);
+            bulblights[2].setHue(10000);
+            bulblights[3].setHue(10000);
+        } else if (Sound_result.equals("baby_cry")) { // baby_cry (아기울음소리)
+            bulblights[1].setHue(25500);
+            bulblights[2].setHue(25500);
+            bulblights[3].setHue(25500);
+        } else if (Sound_result.equals("siren")) { // siren (사이렌)
+            bulblights[1].setHue(46920);
+            bulblights[2].setHue(46920);
+            bulblights[3].setHue(46920);
+        } else if (Sound_result.equals("scream")) { // scream (비명)
+            bulblights[1].setHue(50000);
             bulblights[2].setHue(50000);
+            bulblights[3].setHue(50000);
         }
 
-        bulblights[2].setOn(true);
+        if (bulblights[1].getOn()) {
+            bulblights[1].setOn(false);
+        } else {
+            bulblights[1].setOn(true);
+        }
 
-        // retrofitAPI를 이용하여 json 전송 code
-        retrofitAPI.PutData(bulblights[2]).enqueue(new Callback<List<Bulbreceive>>() {
+        if (bulblights[2].getOn()) {
+            bulblights[2].setOn(false);
+        } else {
+            bulblights[2].setOn(true);
+        }
+
+        if (bulblights[3].getOn()) {
+            bulblights[3].setOn(false);
+        } else {
+            bulblights[3].setOn(true);
+        }
+
+
+        retrofitAPI.PutData(bulblights[1]).enqueue(new Callback<List<Bulbreceive>>() {
+
+
+            @Override
+            public void onResponse(Call<List<Bulbreceive>> call, Response<List<Bulbreceive>> response) {
+                if (response.isSuccessful()) {
+                    List<Bulbreceive> data = response.body();
+                    Log.d("TEST", "성공");
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<List<Bulbreceive>> call, Throwable t) {
+                t.printStackTrace();
+                Log.d("TEST", "실패");
+            }
+        });
+
+        retrofitAPI2.PutData(bulblights[2]).enqueue(new Callback<List<Bulbreceive>>() {
+
+
+            @Override
+            public void onResponse(Call<List<Bulbreceive>> call, Response<List<Bulbreceive>> response) {
+                if (response.isSuccessful()) {
+                    List<Bulbreceive> data = response.body();
+                    Log.d("TEST", "성공");
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<List<Bulbreceive>> call, Throwable t) {
+                t.printStackTrace();
+                Log.d("TEST", "실패");
+            }
+        });
+
+        retrofitAPI3.PutData(bulblights[3]).enqueue(new Callback<List<Bulbreceive>>() {
 
 
             @Override
