@@ -340,9 +340,11 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     try {
-                        MainActivity.Sound_result = response.body().string();
-
-                        Log.v(TAG, "Sound_result = " + MainActivity.Sound_result);
+                        Sound_result = response.body().string();
+                        Log.v(TAG, "flag_0");
+                        Sound_bulb(view);
+                        Log.v(TAG, "flag_1");
+                        Log.v(TAG, "Sound_result = " + Sound_result);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -350,6 +352,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, "error = " + String.valueOf(response.code()));
                     Toast.makeText(getApplicationContext(), "error = " + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 }
+                Log.v(TAG, "flag_2");
+                Sound_bulb2(view);
+                Log.v(TAG, "flag_3");
             }
 
             @Override
@@ -358,23 +363,34 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Response Fail", Toast.LENGTH_SHORT).show();
             }
         });
+
+//        for (int i = 0; i < 10; i++) {
+//            try {
+//                TimeUnit.SECONDS.sleep(1);
+//                Sound_bulb2(view);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
-
+    // 단 시간내에 점, 소등하는 메서드 Sound_bulb2를 호출
     public void Sound_bulb(View view) {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
             try {
                 TimeUnit.SECONDS.sleep(1);
                 Sound_bulb2(view);
+                Log.v(TAG, "flag_run");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    // 서버에서 받아 온 값으로 단 시간내 점소등 하는 메서드
+    // 서버에서 받아 온 상황(String)에 따라 색 조절 및 점, 소등
     public void Sound_bulb2(View view) {
 
+        Log.v(TAG,"Sound_bulb2  " + Sound_result);
         // retrofit 3개 호출
         Retrofit retrofit2 = new Retrofit.Builder()
                 .baseUrl("https://192.168.0.5/api/" + Bridgekey + "/lights/1/")
@@ -397,7 +413,6 @@ public class MainActivity extends AppCompatActivity {
         RetrofitAPI retrofitAPI3 = retrofit4.create(RetrofitAPI.class);
 
 
-        Log.d("sound_data", Sound_result);
         if (Sound_result.equals("glass")) { // glass (유리)
             bulblights[1].setHue(0);
             bulblights[2].setHue(0);
@@ -438,7 +453,7 @@ public class MainActivity extends AppCompatActivity {
             bulblights[3].setOn(true);
         }
 
-
+        Log.v(TAG, "conn_1");
         retrofitAPI.PutData(bulblights[1]).enqueue(new Callback<List<Bulbreceive>>() {
 
 
@@ -457,7 +472,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TEST", "실패");
             }
         });
-
+        Log.v(TAG, "conn_2");
         retrofitAPI2.PutData(bulblights[2]).enqueue(new Callback<List<Bulbreceive>>() {
 
 
@@ -476,7 +491,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TEST", "실패");
             }
         });
-
+        Log.v(TAG, "conn_3");
         retrofitAPI3.PutData(bulblights[3]).enqueue(new Callback<List<Bulbreceive>>() {
 
 
@@ -567,4 +582,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //
 //        }
+
+
+
 }
