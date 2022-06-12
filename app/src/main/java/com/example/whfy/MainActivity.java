@@ -352,9 +352,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, "error = " + String.valueOf(response.code()));
                     Toast.makeText(getApplicationContext(), "error = " + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 }
-                Log.v(TAG, "flag_2");
-                Sound_bulb2(view);
-                Log.v(TAG, "flag_3");
             }
 
             @Override
@@ -363,20 +360,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Response Fail", Toast.LENGTH_SHORT).show();
             }
         });
-
-//        for (int i = 0; i < 10; i++) {
-//            try {
-//                TimeUnit.SECONDS.sleep(1);
-//                Sound_bulb2(view);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     // 단 시간내에 점, 소등하는 메서드 Sound_bulb2를 호출
     public void Sound_bulb(View view) {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 4; i++) {
             try {
                 TimeUnit.SECONDS.sleep(1);
                 Sound_bulb2(view);
@@ -555,7 +543,7 @@ public class MainActivity extends AppCompatActivity {
 //            URL url = new URL("https://192.168.0.5/clip/v2/resource/light/0b41b374-3bd5-4ba8-b6f2-2db5df368f1c");
 //            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            // http 요청에 필요한 타입 정의
+    // http 요청에 필요한 타입 정의
 //            conn.setRequestProperty("Content-Type", "application/json; utf-8");
 //            conn.setRequestMethod("PUT");
 //            conn.setDoOutput(true);
@@ -563,7 +551,7 @@ public class MainActivity extends AppCompatActivity {
 //            conn.setRequestProperty("hue-application-key", "ym33XOFbnmlobmsqwcYEMpNZJzOzm-6ZEXXrxN8D");
 //           conn.setRequestProperty("Accept", "application/json");
 
-            // http 요청 실시
+    // http 요청 실시
 //           conn.connect();
 
 //            JSONObject body = new JSONObject();
