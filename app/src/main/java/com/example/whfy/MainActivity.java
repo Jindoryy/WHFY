@@ -1,5 +1,6 @@
 package com.example.whfy;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.PackageManager;
@@ -453,23 +454,23 @@ public class MainActivity extends AppCompatActivity {
         RetrofitAPI retrofitAPI3 = retrofit4.create(RetrofitAPI.class);
 
 
-        if (Sound_result.equals("glass")) { // glass (유리)
+        if (Sound_result.equals("baby")) {
             bulblights[1].setHue(0);
             bulblights[2].setHue(0);
             bulblights[3].setHue(0);
-        } else if (Sound_result.equals("knock")) { // knock (노크)
+        } else if (Sound_result.equals("knock")) {
             bulblights[1].setHue(10000);
             bulblights[2].setHue(10000);
             bulblights[3].setHue(10000);
-        } else if (Sound_result.equals("baby_cry")) { // baby_cry (아기울음소리)
+        } else if (Sound_result.equals("fall")) {
             bulblights[1].setHue(25500);
             bulblights[2].setHue(25500);
             bulblights[3].setHue(25500);
-        } else if (Sound_result.equals("siren")) { // siren (사이렌)
+        } else if (Sound_result.equals("noise_glitch")) {
             bulblights[1].setHue(46920);
             bulblights[2].setHue(46920);
             bulblights[3].setHue(46920);
-        } else if (Sound_result.equals("scream")) { // scream (비명)
+        } else if (Sound_result.equals("voice")) {
             bulblights[1].setHue(50000);
             bulblights[2].setHue(50000);
             bulblights[3].setHue(50000);
@@ -556,8 +557,6 @@ public class MainActivity extends AppCompatActivity {
     // 리사이클러뷰 생성 및 클릭 이벤트
     private void init() {
 
-        btn_post = (Button) findViewById(R.id.btn_post);
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -572,61 +571,52 @@ public class MainActivity extends AppCompatActivity {
         audioRecordImageBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isRecording) {
-                    // 현재 녹음 중 O
-                    // 녹음 상태에 따른 변수 아이콘 & 텍스트 변경
-                    isRecording = false; // 녹음 상태 값
-                    audioRecordImageBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_mic_24, null)); // 녹음 상태 아이콘 변경
-                    audioRecordText.setText("녹음 시작"); // 녹음 상태 텍스트 변경
+                if (checkAudioPermission()) {
+                        // 녹음 상태에 따른 변수 아이콘 & 텍스트 변경
+                        isRecording = true; // 녹음 상태 값
+                        audioRecordImageBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_mic_24, null)); // 녹음 상태 아이콘 변경
+                        audioRecordText.setText("녹음 중"); // 녹음 상태 텍스트 변경
+                        //startRecording();
+                        recorder.startRecording();
 
-                    try {
-                        recorder.stopRecording();
-
-                        audioFileName = recordPath + "/" + "0_" + "demo.wav";
-                        Toast.makeText(MainActivity.this, "Stop!",
-                                Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
-                    setupNoiseRecorder();
-//                    audioUri = Uri.parse(audioFileName);
 
-
-                    filePost();
                     new Handler().postDelayed(new Runnable()
                     {
                         @Override
                         public void run()
                         {
                             // 딜레이가 끝난 후 실행할 코드 작성.
-                            fileGet();
+                            isRecording = false; // 녹음 상태 값
+                            audioRecordImageBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_mic_24, null)); // 녹음 상태 아이콘 변경
+                            audioRecordText.setText("녹음 시작"); // 녹음 상태 텍스트 변경
+
+                            try {
+                                recorder.stopRecording();
+
+                                audioFileName = recordPath + "/" + "0_" + "demo.wav";
+                                Toast.makeText(MainActivity.this, "Stop!",
+                                        Toast.LENGTH_SHORT).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            setupNoiseRecorder();
+
+
+                            filePost();
+                            new Handler().postDelayed(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    // 딜레이가 끝난 후 실행할 코드 작성.
+                                    fileGet();
+                                }
+                            }, 1300);
                         }
-                    }, 500);
+                    }, 3000);
 
-
-
-//
-                    // 녹화 이미지 버튼 변경 및 리코딩 상태 변수값 변경
-                } else {
-                    // 현재 녹음 중 X
-                    /*절차
-                     *       1. Audio 권한 체크
-                     *       2. 처음으로 녹음 실행한건지 여부 확인
-                     * */
-                    if (checkAudioPermission()) {
-                        // 녹음 상태에 따른 변수 아이콘 & 텍스트 변경
-                        isRecording = true; // 녹음 상태 값
-                        audioRecordImageBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_mic_24, null)); // 녹음 상태 아이콘 변경
-                        audioRecordText.setText("녹음 중"); // 녹음 상태 텍스트 변경
-                        //startRecording();
-                        Log.d(E_TAG, "count: " + ncount);
-                        Log.d(E_TAG, "count: " + ncount);
-                        recorder.startRecording();
-                        Toast.makeText(MainActivity.this, "Start!",
-                                Toast.LENGTH_SHORT).show();
-                    }
                 }
-            }
         });
     }
 
@@ -694,6 +684,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         Sound_result = response.body().string();
                         Sound_bulb();
+
                         Log.v(TAG, "Sound_result = " + Sound_result);
                         Toast.makeText(getApplicationContext(), Sound_result, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
@@ -703,16 +694,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, "error = " + String.valueOf(response.code()));
                     Toast.makeText(getApplicationContext(), "error = " + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                 }
-
-//                new Handler().postDelayed(new Runnable()
-//                {
-//                    @Override
-//                    public void run()
-//                    {
-//                        // 딜레이가 끝난 후 실행할 코드 작성.
-//                        Sound_bulb();
-//                    }
-//                }, 500);
             }
 
             @Override
@@ -742,7 +723,6 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         String result = response.body().string();
                         Log.v(TAG, "result = " + result);
-                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
