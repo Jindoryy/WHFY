@@ -2,11 +2,17 @@ package com.example.whfy;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.pm.PackageManager;
+import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -14,15 +20,41 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
+import omrecorder.Recorder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+
+import android.Manifest;
+import android.media.AudioFormat;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+import android.net.Uri;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+
+import omrecorder.AudioChunk;
+import omrecorder.AudioRecordConfig;
+import omrecorder.OmRecorder;
+import omrecorder.PullTransport;
+import omrecorder.PullableSource;
+import omrecorder.Recorder;
+import omrecorder.WriteAction;
 
 
 
@@ -31,10 +63,10 @@ public class MainActivity extends AppCompatActivity {
     // retrofit log 변수값 (임시)
     private final String TAG = "MainActivityLog";
 
-    //GPU_server 컨테이너
-//    private final String URL = "https://gpu-server-hlndu.run-asia-northeast1.goorm.io/";
-    // server 컨테이너
-    private final String URL = "https://server-zhdfl.run.goorm.io/";
+    // GPU_server 컨테이너
+    private final String URL = "https://gpu-server-hlndu.run-asia-northeast1.goorm.io/";
+//    // server 컨테이너
+//    private final String URL = "https://server-zhdfl.run.goorm.io/";
 
     // 서버에서 넘어오는 사운드 결과값
     static String Sound_result = "initial sound";
@@ -51,6 +83,23 @@ public class MainActivity extends AppCompatActivity {
     // 브릿지 인증 키 값
     static String Bridgekey = "initial value";
 
+    // ↓ 녹음 기능 변수
+    Recorder recorder;
+    Integer ncount = 1;
+    private int PERMISSION_CODE = 21;
+
+    ImageButton audioRecordImageBtn;
+    TextView audioRecordText;
+    private Button btn_post;
+
+    // 오디오 파일 녹음 관련 변수
+    private MediaRecorder mediaRecorder;
+    private String audioFileName; // 오디오 녹음 생성 파일 이름
+    private boolean isRecording = false;    // 현재 녹음 상태를 확인하기 위함.
+    private Uri audioUri = null; // 오디오 파일 uri
+    private ArrayList<Uri> audioList;
+    private static final String E_TAG = "MyTag";
+    private RetrofitAPI service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +110,9 @@ public class MainActivity extends AppCompatActivity {
         radiobutton1 = (RadioButton) findViewById(R.id.rg_btn1);
         radiobutton2 = (RadioButton) findViewById(R.id.rg_btn2);
         radiobutton3 = (RadioButton) findViewById(R.id.rg_btn3);
+
+        init();
+        setupNoiseRecorder();
     }
 
 
@@ -342,7 +394,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         Sound_result = response.body().string();
                         Log.v(TAG, "flag_0");
-                        Sound_bulb(view);
+                        Sound_bulb();
                         Log.v(TAG, "flag_1");
                         Log.v(TAG, "Sound_result = " + Sound_result);
                     } catch (IOException e) {
@@ -363,11 +415,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 단 시간내에 점, 소등하는 메서드 Sound_bulb2를 호출
-    public void Sound_bulb(View view) {
+    public void Sound_bulb() {
         for (int i = 0; i < 4; i++) {
             try {
                 TimeUnit.SECONDS.sleep(1);
-                Sound_bulb2(view);
+                Sound_bulb2();
                 Log.v(TAG, "flag_run");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -376,7 +428,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 서버에서 받아 온 상황(String)에 따라 색 조절 및 점, 소등
-    public void Sound_bulb2(View view) {
+    public void Sound_bulb2() {
 
         Log.v(TAG,"Sound_bulb2  " + Sound_result);
         // retrofit 3개 호출
@@ -500,10 +552,257 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // xml 변수 초기화
+    // 리사이클러뷰 생성 및 클릭 이벤트
+    private void init() {
+
+        btn_post = (Button) findViewById(R.id.btn_post);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        service = retrofit.create(RetrofitAPI.class);
+
+        File recordPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+
+        audioRecordImageBtn = findViewById(R.id.audioRecordImageBtn);
+        audioRecordText = findViewById(R.id.audioRecordText);
+
+        audioRecordImageBtn.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isRecording) {
+                    // 현재 녹음 중 O
+                    // 녹음 상태에 따른 변수 아이콘 & 텍스트 변경
+                    isRecording = false; // 녹음 상태 값
+                    audioRecordImageBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_mic_24, null)); // 녹음 상태 아이콘 변경
+                    audioRecordText.setText("녹음 시작"); // 녹음 상태 텍스트 변경
+
+                    try {
+                        recorder.stopRecording();
+
+                        audioFileName = recordPath + "/" + "0_" + "demo.wav";
+                        Toast.makeText(MainActivity.this, "Stop!",
+                                Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    setupNoiseRecorder();
+//                    audioUri = Uri.parse(audioFileName);
+
+
+                    filePost();
+                    new Handler().postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            // 딜레이가 끝난 후 실행할 코드 작성.
+                            fileGet();
+                        }
+                    }, 500);
 
 
 
+//
+                    // 녹화 이미지 버튼 변경 및 리코딩 상태 변수값 변경
+                } else {
+                    // 현재 녹음 중 X
+                    /*절차
+                     *       1. Audio 권한 체크
+                     *       2. 처음으로 녹음 실행한건지 여부 확인
+                     * */
+                    if (checkAudioPermission()) {
+                        // 녹음 상태에 따른 변수 아이콘 & 텍스트 변경
+                        isRecording = true; // 녹음 상태 값
+                        audioRecordImageBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_mic_24, null)); // 녹음 상태 아이콘 변경
+                        audioRecordText.setText("녹음 중"); // 녹음 상태 텍스트 변경
+                        //startRecording();
+                        Log.d(E_TAG, "count: " + ncount);
+                        Log.d(E_TAG, "count: " + ncount);
+                        recorder.startRecording();
+                        Toast.makeText(MainActivity.this, "Start!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+    }
 
+    // 오디오 파일 권한 체크
+    private boolean checkAudioPermission() {
+        /**오디오 파일 관련 변수*/
+        // 오디오 권한
+        String recordPermission = Manifest.permission.RECORD_AUDIO;
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), recordPermission) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{recordPermission}, PERMISSION_CODE);
+            return false;
+        }
+    }
+
+    private void setupNoiseRecorder() {
+        recorder = OmRecorder.wav(
+                new PullTransport.Noise(mic(),
+                        new PullTransport.OnAudioChunkPulledListener() {
+                            @Override public void onAudioChunkPulled(AudioChunk audioChunk) {
+                                animateVoice((float) (audioChunk.maxAmplitude() / 200.0));
+                            }
+                        },
+                        new WriteAction.Default(),
+                        new Recorder.OnSilenceListener() {
+                            @Override public void onSilence(long silenceTime) {
+                                Log.e("silenceTime", String.valueOf(silenceTime));
+                                Toast.makeText(getApplicationContext(), "silence of " + silenceTime + " detected",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }, 200
+                ), file()
+        );
+    }
+
+    private void animateVoice(final float maxPeak) {
+        audioRecordImageBtn.animate().scaleX(1 + maxPeak).scaleY(1 + maxPeak).setDuration(10).start();
+    }
+
+    private PullableSource mic() {
+        return new PullableSource.Default(
+                new AudioRecordConfig.Default(
+                        MediaRecorder.AudioSource.MIC, AudioFormat.ENCODING_PCM_16BIT,
+                        AudioFormat.CHANNEL_IN_MONO, 44100
+                )
+        );
+    }
+
+    @NonNull
+    private File file() {
+        File recordPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        Log.d(E_TAG,  "name count: " + ncount);
+
+        Log.d(E_TAG,  "name count: " + ncount);
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "0_" + "demo.wav");
+    }
+
+    public void fileGet() {
+        Call<ResponseBody> call_get = service.getFunc("get data");
+        call_get.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        Sound_result = response.body().string();
+                        Sound_bulb();
+                        Log.v(TAG, "Sound_result = " + Sound_result);
+                        Toast.makeText(getApplicationContext(), Sound_result, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.v(TAG, "error = " + String.valueOf(response.code()));
+                    Toast.makeText(getApplicationContext(), "error = " + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                }
+
+//                new Handler().postDelayed(new Runnable()
+//                {
+//                    @Override
+//                    public void run()
+//                    {
+//                        // 딜레이가 끝난 후 실행할 코드 작성.
+//                        Sound_bulb();
+//                    }
+//                }, 500);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.v(TAG, "Fail");
+                Toast.makeText(getApplicationContext(), "Response Fail", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void filePost() {
+
+        File wav_file = new File(audioFileName);
+        Log.v(TAG, "wav_file_log : " + wav_file);
+        //RequestBody fileBody = RequestBody.create(MediaType.parse("audio/wav"), String.valueOf(filePath));
+        RequestBody fileBody = RequestBody.create(MediaType.parse("audio/wav"), wav_file);
+
+        //MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio", "audio.wav", fileBody);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio", ncount + "_demo.wav", fileBody);
+        ncount += 1;
+
+        Call<ResponseBody> call_post = service.postFunc(filePart);
+        call_post.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String result = response.body().string();
+                        Log.v(TAG, "result = " + result);
+                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.v(TAG, "error = " + String.valueOf(response.code()));
+                    Toast.makeText(getApplicationContext(), "error = " + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.v(TAG, "Fail");
+                Toast.makeText(getApplicationContext(), "Response Fail", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+//    //클릭 시 get, post 동작
+//    public void onClick(View v) {
+//        switch (v.getId()) {
+//            case R.id.btn_post:
+//
+//                //Uri filePath = audioList.get(0);
+//                File wav_file = new File(audioFileName);
+//                Log.v(TAG, "wav_file_log : " + wav_file);
+//                //RequestBody fileBody = RequestBody.create(MediaType.parse("audio/wav"), String.valueOf(filePath));
+//                RequestBody fileBody = RequestBody.create(MediaType.parse("audio/wav"), wav_file);
+//
+//                //MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio", "audio.wav", fileBody);
+//                MultipartBody.Part filePart = MultipartBody.Part.createFormData("audio", ncount + "_demo.wav", fileBody);
+//
+//                Call<ResponseBody> call_post = service.postFunc(filePart);
+//                call_post.enqueue(new Callback<ResponseBody>() {
+//                    @Override
+//                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                        if (response.isSuccessful()) {
+//                            try {
+//                                String result = response.body().string();
+//                                Log.v(TAG, "result = " + result);
+//                                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        } else {
+//                            Log.v(TAG, "error = " + String.valueOf(response.code()));
+//                            Toast.makeText(getApplicationContext(), "error = " + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                        Log.v(TAG, "Fail");
+//                        Toast.makeText(getApplicationContext(), "Response Fail", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//                break;
+//            default:
+//                break;
+//        }
+//    }
 
 
 

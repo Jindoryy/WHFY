@@ -50,6 +50,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.14.9'
 
+    implementation 'com.github.kailash09dabhi:OmRecorder:1.1.5'
 //    // https://mvnrepository.com/artifact/com.kailashdabhi/om-recorder
 //    implementation group: 'com.kailashdabhi', name: 'om-recorder', version: '1.1.0'
 
