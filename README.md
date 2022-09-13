@@ -19,7 +19,7 @@
 아기 울음 소리 : 빨간색 조명 점멸<br>
 노크 소리 : 노란색 조명 점멸<br>
 
-시연동영상
+결과 동영상 : https://youtu.be/vxWF4g2Le6I
 
 # 맡은 역할 :thumbsup:
 
