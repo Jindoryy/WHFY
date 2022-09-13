@@ -44,11 +44,25 @@
 - 브릿지의 키값과 전구의 고유번호를 포함한 URL에 JSON 형식에 맞게 JAVA Class 를 구현 후 GSON(JAVA Class -> JSON 역직렬화)을 이용해 POST 또는 PUT 요청을 통해 전구 제어
 - 받아오는 JSON 형태의 값을 GSON(JSON -> JAVA Class 직렬화)을 이용해 전구 상태에 따른 알림 출력
 
-# 기술 :pencil2:
+# 개발환경 :pencil2:
 
-<img src="https://img.shields.io/badge/JAVA-007396?style=for-the-badge&logo=java&logoColor=white"><img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white"><img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"><img src="https://img.shields.io/badge/jquery-0769AD?style=for-the-badge&logo=jquery&logoColor=white">
-<br>
-<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML&logoColor=white"><img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=CSS3&logoColor=white"><img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white">
+AndroidStudio
+
+Ubuntu 20.04
+
+tensorflow-gpu 2.6
+
+keras 2.4
+
+goormide
+
+python 3.6 
+
+NodeJS 10.19.0
+
+Express 4.16.1
+
+MySQL 8.0
 
 # 개선점 :pray:
 
