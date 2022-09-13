@@ -47,21 +47,13 @@
 # 개발환경 :pencil2:
 
 AndroidStudio
-
 Ubuntu 20.04
-
 tensorflow-gpu 2.6
-
 keras 2.4
-
 goormide
-
 python 3.6 
-
 NodeJS 10.19.0
-
 Express 4.16.1
-
 MySQL 8.0
 
 # 개선점 :pray:
