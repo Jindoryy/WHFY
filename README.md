@@ -46,14 +46,14 @@
 
 # 개발환경 :pencil2:
 
-AndroidStudio
-Ubuntu 20.04
-tensorflow-gpu 2.6
-keras 2.4
-goormide
-python 3.6 
-NodeJS 10.19.0
-Express 4.16.1
+AndroidStudio<br>
+Ubuntu 20.04<br>
+tensorflow-gpu 2.6<br>
+keras 2.4<br>
+goormide<br>
+python 3.6<br>
+NodeJS 10.19.0<br>
+Express 4.16.1<br>
 MySQL 8.0
 
 # 개선점 :pray:
